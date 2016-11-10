@@ -58,17 +58,13 @@ def upload_file():
 <!doctype html>
 <title>Upload file to classify</title>
 <h1>Upload file to classify</h1>
-<p>Note that no physical copy of the uploaded file is retained on the server. However it is good practice to ensure that the uploaded file does contain sensitive information - for example Personal Indentifying Information.</p>
+<h3>Classify version: 0.4.0</h3>
+<h3>Model: adaboost classifier</h3>
+<p>Ensure that no personal identifying information is uploaded to this service.</p>
+<p>Note that no physical copy of the uploaded file is retained on the server.</p>
 <form action="" method=post enctype=multipart/form-data>
     <p><input type=file name=file>
        <input type=submit value=Upload>
 </form>
 '''
-
-from flask import send_from_directory
-
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-        return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
-
 
