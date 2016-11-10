@@ -56,15 +56,25 @@ def upload_file():
 
     return '''
 <!doctype html>
-<title>Upload file to classify</title>
 <h1>Upload file to classify</h1>
-<h3>Classify version: 0.4.0</h3>
-<h3>Model: adaboost classifier</h3>
-<p>Ensure that no personal identifying information is uploaded to this service.</p>
+<h3>Instructions</h3>
+<p>Select a survey file downloaded as CSV file from survey monkey, and click upload. The app will then:</p>
+<ul>
+<li>Clean the data</li>
+<li>Interrogate the GOV.UK content API to return <code>org</code> and <code>section</code> data</li>
+<li>Apply a machine learning model to the newly cleaned data to predict survey classes</li>
+<li>Incorporate predictions into the original dataset, and download the new dataset as a CSV file.</li>
+</ul>
+<p><em>Ensure that no personal identifying information is uploaded to this service.</em></p>
 <p>Note that no physical copy of the uploaded file is retained on the server.</p>
 <form action="" method=post enctype=multipart/form-data>
     <p><input type=file name=file>
        <input type=submit value=Upload>
 </form>
+<h3>Documentation</h3>
+<ul>
+<li><a href="https://github.com/ivyleavedtoadflax/classify">classify module</a>: responsible for data cleansing.</li>
+</ul>
+<h3>Classify version: 0.4.0</h3>
+<h3>Model: adaboost classifier</h3>
 '''
-
