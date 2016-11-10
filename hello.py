@@ -1,6 +1,9 @@
-import os
-from flask import Flask, request, redirect, url_for
-from werkzeug.utils import secure_filename
+import os, pickle
+from flask import Flask, request, redirect, url_for, make_response
+#from werkzeug.utils import secure_filename
+import pandas as pd
+import numpy as np
+from classify import classify
 
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = set(['csv'])
@@ -26,14 +29,36 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',filename=filename))
+
+            # Do note save the file to ensure no persistence on the server
+            # Operate directly on the bytestream in 'file'
+            
+            #filename = secure_filename(file.filename)
+            #content = pd.read_csv(file)
+            intent = classify.survey()
+            intent.load(file)
+            intent.clean_raw()
+            intent.clean_urls()
+            intent.api_lookup()
+
+            no_comments = (intent.data['comment_further_comments'] == 'none') & (intent.data['comment_where_for_help'] == 'none') & (intent.data['comment_other_where_for_help'] == 'none') & (intent.data['comment_why_you_came'] == 'none')
+            easy_nones = intent.data.loc[no_comments,'respondent_ID'].astype(int)
+
+            intent.data = intent.data.loc[~no_comments]
+            #download_file = Response(intent.data.to_csv(),mimetype='text/csv')
+            output = make_response(intent.data.to_csv())
+            output.headers["Content-Disposition"] = "attachment; filename=export.csv"
+            output.headers["Content-type"] = "text/csv"
+            return(output)
+#            
+            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #return redirect(url_for('uploaded_file',filename=filename))
 
     return '''
 <!doctype html>
-<title>Upload new File</title>
-<h1>Upload new File</h1>
+<title>Upload file to classify</title>
+<h1>Upload file to classify</h1>
+<p>Note that no physical copy of the uploaded file is retained on the server. However it is good practice to ensure that the uploaded file does contain sensitive information - for example Personal Indentifying Information.</p>
 <form action="" method=post enctype=multipart/form-data>
     <p><input type=file name=file>
        <input type=submit value=Upload>
@@ -44,7 +69,6 @@ from flask import send_from_directory
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-        return send_from_directory(app.config['UPLOAD_FOLDER'],
-                                               filename)
+        return send_from_directory(app.config['UPLOAD_FOLDER'],filename)
 
 

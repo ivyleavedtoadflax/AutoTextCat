@@ -1,0 +1,3 @@
+[submodule "classify"]
+	path = classify
+	url = git@github.com:ivyleavedtoadflax/classify.git
