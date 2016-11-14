@@ -56,14 +56,14 @@ def upload_file():
 
     return '''
 <!doctype html>
-<h1>Upload file to classify</h1>
+<h1>Automate classification of GOV.UK intents survey</h1>
 <h3>Instructions</h3>
 <p>Select a survey file downloaded as CSV file from survey monkey, and click upload. The app will then:</p>
 <ul>
 <li>Clean the data</li>
-<li>Interrogate the GOV.UK content API to return <code>org</code> and <code>section</code> data</li>
-<li>Apply a machine learning model to the newly cleaned data to predict survey classes</li>
-<li>Incorporate predictions into the original dataset, and download the new dataset as a CSV file.</li>
+<li>Look up org and section data using the content API</li>
+<li>Automatically classify both <code>ok</code> and <code>none</code> cases </li>
+<li>Incorporate predictions, org, and section to the the original dataset, and download as a CSV file.</li>
 </ul>
 <p><em>Ensure that no personal identifying information is uploaded to this service.</em></p>
 <p>Note that no physical copy of the uploaded file is retained on the server.</p>
