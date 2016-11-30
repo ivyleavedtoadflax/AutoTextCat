@@ -56,7 +56,7 @@ def upload_file():
 
     return '''
 <!doctype html>
-<h1>Automate classification of GOV.UK intents survey</h1>
+<h1>Automate classification of intents survey</h1>
 <h3>Instructions</h3>
 <p>Select a survey file downloaded as CSV file from survey monkey, and click upload. The app will then:</p>
 <ul>
